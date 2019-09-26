@@ -1,27 +1,24 @@
 const request = require('request');
 
-const input = process.argv.slice(2);
-
-request('https://api.thecatapi.com/v1/breeds/search?q=' + input[0],
-  (err, res, body) => {
-    // err = "Could not find website"
-    if (err) { return console.log(err); }
+const fetchBreedDescription = function(breedName, callback) {
+  request('https://api.thecatapi.com/v1/breeds/search?q=' + breedName, (err, res, body) => {
+    if (err) {
+      // return console.log(err);
+      return callback(err);
+    }
     const data = JSON.parse(body);
-    // console.log(typeof body);
-    // console.log(data);
-    // console.log(typeof data);
     if (data[0] === undefined) {
-      console.log("Breed not found!");
+      callback(null);
     } else {
-      console.log(data[0].description);
-    };
-  });
+      callback(null, data[0].description);
+    }
+  }
+  );
+};
+// fetchBreedDescription(breedName);
 
 
-
-
-
-
+module.exports = { fetchBreedDescription };
 // request(inputRequest[0], (error, response, body) => {
 //   const byteTotal = fs.statSync(inputRequest[1]);
 //   const fileSize = byteTotal.size;
